@@ -2,17 +2,17 @@
 
 A framework for advancing data warehousing and governance practices.
 
-## Kafka Ingestion + Integration
+## Ingestion Layer  
 
-Disparate data sources loaded into S3, which serves as a raw data store.
+Confluent Kafka python connector to ingest data from multiple sources to raw data store in S3.
 
-## Spark Processing
+## Apache Beam Orchestration
 
-Batch processing jobs from Spark transform data to enable joining seemingly unrelated sources.
+Apache Flink Cluster will execute transformations delegated by Apache Beam.
 
 ## Metadata Lake
 
-Metadata is catalogued when it arrives in S3 and during every transformation.
+Metadata is catalogued when it arrives in S3 and during every transformation.  Kafka metadata producers will be used to submit metadata logs to a central metadata store.
 
 ## Data Versioning
 

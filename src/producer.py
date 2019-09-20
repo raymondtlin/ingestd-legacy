@@ -44,22 +44,10 @@ def stream_file(conf):
                     print(record)
                     yield record
 
-kafka_conf = {"bootstrap_servers": "kafka1"}
+kafka_conf = {"bootstrap.servers":"localhost:9092"}
 
 p = kafka.Producer(**kafka_conf)
 for record in stream_file(conf):
     p.poll(0)
-    p.produce(topic, data.encode('utf-8'))
-    p.flush()
-
-
-def publish(producer_instance, topic, key, value):
-    try:
-        key_bytes = bytes(key, encoding='utf-8')
-        value_bytes = bytes(value, encoding='utf-8')
-
-        producer_instance.send(topic, key_bytes, value_bytes)
-        producer_instance.flush()
-    except Exception as e:
-        print('Exception while publishing')
-        print(str(e))
+    p.produce('topic', record)
+p.flush()

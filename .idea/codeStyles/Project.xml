@@ -1,0 +1,9 @@
+<component name="ProjectCodeStyleConfiguration">
+  <code_scheme name="Project" version="173">
+    <MSSQLCodeStyleSettings version="2">
+      <option name="KEYWORD_CASE" value="0" />
+      <option name="TYPE_CASE" value="0" />
+      <option name="QUERY_SECTION_1ST_WORD_ALIGN" value="8" />
+    </MSSQLCodeStyleSettings>
+  </code_scheme>
+</component>

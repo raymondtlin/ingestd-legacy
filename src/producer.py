@@ -1,21 +1,8 @@
 #!/usr/bin/env python
-
-import csv
-from os import getenv
-
 import boto3
 import confluent_kafka as kafka
 from typing import NamedTuple
-
-aws_config = dict(service_name='s3',
-                  region='us-west-2',
-                  aws_secret_access_key=getenv('SECRET_ACCESS_KEY'),
-                  aws_access_key_id=getenv('SECRET_ACCESS_ID'),
-                  aws_session_token=getenv('SESSION_TOKEN')
-                  )
-resource = boto3.resource('s3')
-
-
+import re
 
 def enumerate_keys(bucket, prefix="") -> str:
     """
@@ -42,25 +29,24 @@ def enumerate_keys(bucket, prefix="") -> str:
                 print('Key not found.')
 
 
-
+conf = {'Bucket':'ingestd-prod-raw'}
 def stream_file(conf):
     """
     :param kwargs:
     :return: yield stream
     """
-    for file in enumerate_keys(**conf):
-        with open(file, 'rb') as data:
-            reader = csv.reader(data)
-            fields = reader.__iter__()
-            StreamRecord = NamedTuple("StreamRecord_", fields)
-            for row in map(StreamRecord._make, reader):
-                print(row)
-                yield row
+    import botocore
+    for file in enumerate_keys(bucket=conf['Bucket']):
+        if re.findall('csv', file):
+            resource = boto3.resource('s3')
+            response = resource.Object(conf['Bucket'], key=file).get()
+            for record in response['Body'].iter_lines():
+                    print(record)
+                    yield record
 
+kafka_conf = {"bootstrap_servers": "kafka1"}
 
-conf = {"bootstrap_servers": "kafka1"}
-
-p = kafka.Producer(**conf)
+p = kafka.Producer(**kafka_conf)
 for record in stream_file(conf):
     p.poll(0)
     p.produce(topic, data.encode('utf-8'))

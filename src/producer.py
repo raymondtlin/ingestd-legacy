@@ -4,7 +4,6 @@ import re
 import boto3
 import confluent_kafka as kafka
 
-
 def enumerate_keys(bucket, prefix="") -> str:
     """
     Yield keys
@@ -14,7 +13,8 @@ def enumerate_keys(bucket, prefix="") -> str:
     """
     s3 = boto3.client('s3')
     paginator = s3.get_paginator('list_objects_v2')
-    kwargs = {'Bucket': bucket}
+    kwargs = {'Bucket': bucket,
+              'Prefix': prefix}
     if isinstance(prefix, str):
         prefixes = (prefix,)
     else:
@@ -32,27 +32,29 @@ def enumerate_keys(bucket, prefix="") -> str:
             except KeyError as e:
                 print('Key not found.')
 
-def open_stream():
+def open_stream(conf):
     """
-    :param kwargs:
+    :param: conf
     :return: yield stream
     """
-    for file in enumerate_keys(bucket=conf['Bucket']):
+    for file in enumerate_keys(bucket=conf['Bucket'],prefix=conf['Prefix']):
         if re.findall('csv', file):
             resource = boto3.resource('s3')
             response = resource.Object(conf['Bucket'], key=file).get()
 
             for rec in response['Body'].iter_lines():
                 print(rec)
+
                 yield (rec, file.split('/')[1])
 
-
-kafka_conf = {"bootstrap.servers": "kafka"}
+conf={"Bucket":"ingestd-prod-raw",
+      "Prefix":"sec-web-access"}
+kafka_conf = {"bootstrap.servers": "kafka",}
 import codecs
 
-with open kafka.Producer(**kafka_conf) as p:
-    for record in open_stream(conf):
-        p.poll(0)
-        p.produce(topic=topic)
-    p.flush()
+p = kafka.Producer(**kafka_conf)
+for record in open_stream(conf):
+    p.poll(1)
+    p.produce(topic='sec')
+p.flush()
 

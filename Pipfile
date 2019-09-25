@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+certifi = "*"
+aws-cdk-core = "*"
+confluent-kafka = "*"
+avro-python3 = "*"
+awscli = "*"
+apache-beam = "*"
+
+[requires]
+python_version = "3.7"

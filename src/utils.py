@@ -43,9 +43,4 @@ def get_historical_idx(year, quarter):
     url = f'https://www.sec.gov/Archives/edgar/full-index/{year}/QTR{quarter}/crawler.idx'
 
     response = requests.get(url)
-
     return response.content.decode(encoding='utf-8')
-
-
-def parse_idx(idx):
-    pass

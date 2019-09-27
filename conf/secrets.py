@@ -3,9 +3,12 @@ import base64
 from botocore.exceptions import ClientError
 
 
-def get_secret():
-
-    secret_name = "aurora/root"
+def get_secret(name) -> str:
+    """
+    :param: name: string
+    :return string
+    """
+    secret_name = name
     region_name = "us-west-2"
 
     # Create a Secrets Manager client

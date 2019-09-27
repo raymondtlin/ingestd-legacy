@@ -2,14 +2,14 @@
 import csv
 from io import StringIO
 from boto3 import client
-from src.utils import conf
+from conf.kafka import kafkaConfig, bucketConfig
 from confluent_kafka import Producer
 
 # Init client connection
 s3Client = client('s3')
 
 # Iterate over keys
-for obj in s3Client.list_objects_v2(**conf.bucketConfig).get('Contents'):
+for obj in s3Client.list_objects_v2(**bucketConfig).get('Contents'):
     if obj['Size'] <= 0:
         continue
 
@@ -54,7 +54,7 @@ def init_producer(kafka_conf):
     return Producer(**kafka_conf)
 
 
-p = init_producer(conf.kafkaConfig)
+p = init_producer(kafkaConfig)
 
 for record in stream_file(r):
     p.produce(topic='mimic',

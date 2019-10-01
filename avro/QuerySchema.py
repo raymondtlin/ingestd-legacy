@@ -24,3 +24,4 @@ class TableSchema:
         response = rds_client.execute_statement(sql, **rds.params)
         for record in response['records']:
             print(record)
+

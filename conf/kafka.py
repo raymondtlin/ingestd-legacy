@@ -3,6 +3,7 @@ bucketConfig = {
     "Prefix": ""
 }
 
-kafkaConfig = {
-    "bootstrap.servers": "kafka"
+producerConfig = {
+    "bootstrap.servers": "kafka1:9092,kafka2:9092,kafka3:9092",
+    
 }

@@ -5,9 +5,6 @@ from conf import rds
 import re
 
 
-
-rds_client = boto3.client('rds')
-
 class TableSchema:
     fields: list
     name:   str
@@ -31,6 +28,8 @@ class TableSchema:
             FROM    information_schema.columns\
             WHERE   table_name = {self.name}
             """
+        
+        rds_client = boto3.client('rds')
         response = rds_client.execute_statement(sql, **rds.params)
         for record in response['records']:
             yield(record)

@@ -1,5 +1,6 @@
 import boto3
 from conf.rds import rds
+from typing import DefaultDict, List
 
 # set clients
 s3 = boto3.client('s3') 
@@ -30,8 +31,8 @@ query += u"WHERE table_catalog = 'public'"
 schema = TableSchema(query)
 
 table_schema = DefaultDict(List)
-
 fields = []
-for table_name, column_name, data_type in schema:
+for table_name, column_name, data_type in schema.fetch():
     for tbl in set(table_name):
-        fields.append({"field_name":column_name,"field_type":data_type}) 
+        if table_name in tbl:
+            table_schema.update(dict({tbl:fields.append({"field_name":column_name,"field_type":data_type})}))

@@ -53,6 +53,3 @@ avroProducer = AvroProducer({
 
 avroProducer.produce(topic='my_topic', value=value, key=key)
 avroProducer.flush()
-
-        
-            

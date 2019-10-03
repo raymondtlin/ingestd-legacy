@@ -1,0 +1,18 @@
+version: '1.0'
+steps:
+  main_clone:
+  	type: git-clone
+	description: Cloning main repository...
+	repo: raymondtlin/ingestd
+	revision: '${{CF_BRANCH}}'
+  build_image:
+    title: build connect image
+    type: build
+    image_name: confluent-connect
+    dockerfile: './confluent-platform/kafka-connect/Dockerfile'
+  push_to_registry:
+    title: push to ECR
+    type: push
+    candidate: '${{build_image}}'
+    tag: 'confluent-connect'
+    registry: ingestd

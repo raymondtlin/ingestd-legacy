@@ -1,19 +1,9 @@
-# ingestd
+# ingestd - a data-warehouse integration framework
 
-A framework for advancing data warehousing and governance practices.
+Inspired by Snowflake DB's time-travel feature enables users to reproduce data from earlier states, ingestd is a pipeline which enables data reproduceability at scale.
 
-## Ingestion Layer  
+ingestd ingests database events by employing `Debezium's MYSQL Kafka Connector` in order to stream CDC events from the relational store.  These messages are registered in `Confluent's Schema Registry` and serialized in `Avro` format.  
 
-Confluent Kafka python connector to ingest data from multiple sources to raw data store in S3.
+A consumer reads from the CDC Kafka topic and tags each message with its appropriate version.  Additional metadata is injected at this stage in order to provide full context as to the state.
 
-## Apache Beam Orchestration
-
-Apache Flink Cluster will execute transformations delegated by Apache Beam.
-
-## Metadata Lake
-
-Metadata is catalogued when it arrives in S3 and during every transformation.  Kafka metadata producers will be used to submit metadata logs to a central metadata store.
-
-## Data Versioning
-
-Production data is snapshotted and retained for a designated period, allowing for persistent data versioning and data lineage.
+Data is then persisted to a database store and served via `Apache Superset`.

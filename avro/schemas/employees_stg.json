@@ -1,0 +1,12 @@
+ {"namespace": "ingestd.avro.schemas",
+             "type": "record",
+             "name": "employeesStg",
+             "fields": [{"name": "EMPLOYEEID", "type": ["integer", "null"]},
+                        {"name": "MANAGERID", "type": ["integer", "null"]},
+                        {"name": "EMPLOYEEFIRSTNAME", "type": "string"},
+                        {"name": "EMPLOYEELASTNAME", "type": "string"},
+                        {"name": "EMPLOYEEMI", "type": ["string", "null"]},
+                        {"name": "EMPLOYEEJOBCODE", "type": ["integer", "null"]},
+                        {"name": "EMPLOYEEBRANCH", "type": ["string", "null"]},
+                        {"name": "EMPLOYEEOFFICE", "type": ["string", "null"]},
+                        {"name": "EMPLOYEEPHONE", "type": ["string", "null"]}]}

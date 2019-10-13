@@ -1,0 +1,84 @@
+{
+  "namespace": "ingestd.avro.schemas" ,
+  "type": "record" ,
+  "name": "holdings" ,
+  "fields": [
+    {
+      "name": "TRADE_ID" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "CURRENT_TRADE_ID" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "SK_CUSTOMER_ID" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "SK_ACCOUNT_ID" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "SK_SECURITY_ID" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "SK_COMPANY_ID" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "SK_DATE_ID" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "SK_TIME_ID" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "CURRENT_PRICE" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "CURRENT_HOLDING" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "BATCH_ID" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    }
+  ]
+}

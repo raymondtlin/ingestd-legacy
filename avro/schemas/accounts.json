@@ -1,0 +1,53 @@
+{
+  "namespace": "ingestd.avro.schemas" ,
+  "type": "record" ,
+  "name": "accounts" ,
+  "fields": [
+    {
+      "name": "cdc_flag" ,
+      "type": "enum" ,
+      "symbols": [
+        "I" ,
+        "U"
+      ]
+    } ,
+    {
+      "name": "cdc_dsn" ,
+      "type": "string"
+    } ,
+    {
+      "name": "ca_id" ,
+      "type": "string"
+    } ,
+    {
+      "name": "ca_b_id" ,
+      "type": "string"
+    } ,
+    {
+      "name": "ca_c_id" ,
+      "type": "string"
+    } ,
+    {
+      "name": "ca_name" ,
+      "type": [
+        "string" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "ca_tx_st" ,
+      "type": [
+        "integer" ,
+        "null"
+      ]
+    } ,
+    {
+      "name": "ca_st_id" ,
+      "type": "enum" ,
+      "symbols": [
+        "ACTV" ,
+        "INAC"
+      ]
+    }
+  ]
+}

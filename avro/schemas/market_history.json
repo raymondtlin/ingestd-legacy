@@ -1,0 +1,18 @@
+ {"namespace": "ingestd.avro.schemas",
+                  "type": "record",
+                  "name": "marketHistory",
+                  "fields": [{"name": "SK_SECURITY_ID", "type": ["integer", "null"]},
+                             {"name": "SK_COMPANY_ID", "type": ["integer", "null"]},
+                             {"name": "SK_DATE_ID", "type": ["integer", "null"]},
+                             {"name": "PE_RATIO", "type": ["integer", "null"]},
+                             {"name": "YIELD", "type": "integer"},
+                             {"name": "FIFTY_TWO_WEEK_HIGH", "type": "integer"},
+                             {"name": "SK_FIFTY_TWO_WEEK_HIGH_DATE", "type": ["integer", "null"]},
+                             {"name": "FIFTY_TWO_WEEK_LOW", "type": "integer"},
+                             {"name": "SK_FIFTY_TWO_WEEK_LOW_DATE", "type": ["integer", "null"]},
+                             {"name": "CLOSE_PRICE", "type": "integer"},
+                             {"name": "DAY_HIGH", "type": "integer"},
+                             {"name": "DAY_LOW", "type": "integer"},
+                             {"name": "VOLUME", "type": ["integer", "null"]},
+                             {"name": "BATCH_ID", "type": ["integer", "null"]}
+                             ]}

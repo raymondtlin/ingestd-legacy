@@ -1,0 +1,6 @@
+ {"namespace": "ingestd.avro.schemas",
+                 "name": "trade_history",
+                 "type": "record",
+                 "fields": [{"name": "TH_T_ID", "type": ["integer", "null"]},
+                            {"name": "TH_DTS", "type": "integer"},
+                            {"name": "TH_ST_ID", "type": "string"}]}

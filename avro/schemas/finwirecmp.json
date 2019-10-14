@@ -16,5 +16,4 @@
                           {"name": "STATE_PROVINCE", "type": "string"},
                           {"name": "COUNTRY", "type": ["string", "null"]},
                           {"name": "CEO_NAME", "type": "string"},
-                          {"name": "DESCRIPTION", "type": "string"},
-                          {"name": "LAST_UPDATED_TS", "type": "double"}]}
+                          {"name": "DESCRIPTION", "type": "string"},]}

@@ -1,4 +1,4 @@
-{"namespace": "ingestd.avro.schemas",
+         {"namespace": "ingestd.avro.schemas",
                "type": "record",
                "name": "finwiresec",
                "fields": [{"name": "PTS", "type": "double"},
@@ -12,5 +12,4 @@
                           {"name": "FIRST_TRADE_DATE", "type": "integer"},
                           {"name": "FIRST_TRADE_EXCHG", "type": "integer"},
                           {"name": "DIVIDEND", "type": "integer"},
-                          {"name": "CO_NAME_OR_CIK", "type": "string"},
-                          {"name": "LAST_UPDATED_TS", "type": "double"}]}
+                          {"name": "CO_NAME_OR_CIK", "type": "string"}]}

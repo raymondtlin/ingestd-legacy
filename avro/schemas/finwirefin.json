@@ -17,5 +17,5 @@
                           {"name": "LIABILITIES", "type": "integer"},
                           {"name": "SH_OUT", "type": "integer"},
                           {"name": "DILUTED_SH_OUT", "type": "integer"},
-                          {"name": "CO_NAME_OR_CIK", "type": "string"},
-                          {"name": "LAST_UPDATED_TS", "type": "double"}]}
+                          {"name": "CO_NAME_OR_CIK", "type": "string"}
+               ]}

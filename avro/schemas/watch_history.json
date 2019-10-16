@@ -1,9 +1,0 @@
- {"namespace": "ingestd.avro.schemas",
-                     "type": "record",
-                     "name": "watchHistoryStg",
-                     "fields": [{"name": "CDC_FLAG", "type": ["string", "null"]},
-                                {"name": "CDC_DSN", "type": ["integer", "null"]},
-                                {"name": "W_C_ID", "type": ["integer", "null"]},
-                                {"name": "W_S_SYMB", "type": "string"},
-                                {"name": "W_DTS", "type": "integer"},
-                                {"name": "W_ACTION", "type": ["string", "null"]}]}

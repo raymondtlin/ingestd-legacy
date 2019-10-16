@@ -2,7 +2,7 @@
 import csv
 from io import StringIO
 from boto3 import client
-from conf.kafka import producerConfig, bucketConfig
+from conf.kafka import producer, bucketConfig
 from confluent_kafka import Producer
 
 # Init client connection

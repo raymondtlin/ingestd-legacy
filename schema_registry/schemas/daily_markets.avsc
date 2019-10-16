@@ -1,0 +1,1 @@
+{"namespace":"ingestd.schema_registry.schemas","type":"record","name":"dailymarketStg","fields":[{"name":"CDC_FLAG","type":["string","null"]},{"name":"CDC_DSN","type":"string"},{"name":"DM_DATE","type":"int"},{"name":"DM_S_SYMB","type":"string"},{"name":"DM_CLOSE","type":"int"},{"name":"DM_HIGH","type":"int"},{"name":"DM_LOW","type":"int"},{"name":"DM_VOL","type":"int"}]}

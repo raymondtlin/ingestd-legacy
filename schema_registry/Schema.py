@@ -3,8 +3,7 @@ from __future__ import absolute_import
 import json
 import re
 from pathlib import Path
-from typing import DefaultDict, List
-
+from collections import defaultdict
 from fastavro import writer, parse_schema
 
 
@@ -14,7 +13,7 @@ class Schema(object):
     # as_dict: dict
 
     def __init__(self, fields=None, name=None, as_dict=None):
-        self.fields = fields
+        self.fields = [] or fields
         self.name = name
         self.as_dict = as_dict
 
@@ -24,7 +23,7 @@ class Schema(object):
         """
         parsed = parse_schema(self.as_dict)
 
-        with open(f'{self.name}.avsc', 'wb') as handle:
+        with open('{0}.avsc'.format(self.name), 'wb') as handle:
             writer(handle, parsed)
 
 
@@ -55,13 +54,13 @@ class DBTableSchema(Schema):
         else:
             sql = "SELECT to_json(table_name), to_json(column_name), to_json(data_type)"
             sql += "FROM information_schema.columns"
-            sql += f"WHERE table_name = {table_name}"
+            sql += "WHERE table_name = {0}".format(table_name)
 
         response = self.client.execute_statement(sql, **config.params)
         for record in response['records']:
             yield (record)
 
-    def to_dict(self) -> DefaultDict[List]:
+    def to_dict(self) -> defaultdict(list):
 
         for column_name, data_type in self.fetch():
             self.as_dict.update(
@@ -79,5 +78,5 @@ class JSONSchema(Schema):
         self.file_path = Path(file_path)
         self.as_dict = json.loads(self.file_path.read_text())
 
-        for field in self.as_dict['fields']:
-            self.fields.append(field)
+        #for field in self.as_dict['fields']:
+        #    self.fields.append(field)

@@ -1,9 +1,0 @@
- {"namespace": "ingestd.avro.schemas",
-            "type": "record",
-            "name": "holdingStg",
-            "fields": [{"name": "CDC_FLAG", "type": ["string", "null"]},
-                       {"name": "CDC_DSN", "type": "string"},
-                       {"name": "HH_H_T_ID", "type": ["integer", "null"]},
-                       {"name": "HH_T_ID", "type": ["integer", "null"]},
-                       {"name": "HH_BEFORE_QTY", "type": ["integer", "null"]},
-                       {"name": "HH_AFTER_QTY", "type": ["integer", "null"]}]}

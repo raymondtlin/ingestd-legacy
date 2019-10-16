@@ -1,6 +1,0 @@
-{"namespace": "ingestd.avro.schemas",
-            "type": "record",
-            "name": "taxRates",
-            "fields": [{"name": "TX_ID", "type": "string"},
-                       {"name": "TX_NAME", "type": "string"},
-                       {"name": "TX_RATE", "type": "integer"}]}

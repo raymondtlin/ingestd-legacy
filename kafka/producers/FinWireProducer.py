@@ -1,29 +1,27 @@
 from __future__ import absolute_import
+
 from pathlib import Path
-from os import getcwd, listdir
+from os import getcwd
 from re import compile, findall
-from struct import Struct
-from confluent_kafka.avro import AvroProducer, loads
-from conf.kafka import producerConfig
-from datetime import datetime
-from schema_registry import Schema
-from confluent_kafka.admin import AdminClient
+from uuid import uuid4
+from confluent_kafka.avro import AvroProducer, load
+from itertools import zip_longest, accumulate
 
 
-schema_path = Path(getcwd(), 'schema_registry/schemas').as_posix()
-file_names = [schema for schema in listdir(schema_path) if 'finwire' in schema]
+root_dir = Path(getcwd())
+schema_dir = root_dir / "schema_registry" / "schemas"
 
 field_widths = {"SEC": (15, 3, 15, 6, 4, 70, 6, 13, 8, 8, 12),
                 "FIN": (15, 3, 4, 1, 8, 8, 17, 17, 12, 12, 12, 17, 17, 17, 26, 150),
                 "CMP": (15, 3, 60, 10, 4, 2, 4, 8, 80, 80, 12, 25, 20, 24, 46, 150)}
 
 
-def create_parser(fieldwidths):
+def create_parser(fieldwidths: tuple):
     # https://stackoverflow.com/a/4915359
     """
-    Constructs a tuple of fieldwidths to parse fixedwidth records
-    :param fieldwidths:
-    :return:
+    Constructs a tuple of fieldwidths to parse fixed-width records
+    :param: fieldwidths: tuple of field-lengths + pad-lengths to split line by
+    :return: parsed line as List[string]
     """
     cuts = tuple(cut for cut in accumulate(abs(fw) for fw in fieldwidths))
     pads = tuple(fw < 0 for fw in fieldwidths)
@@ -36,68 +34,80 @@ def create_parser(fieldwidths):
     return parse
 
 
-def find_type(record):
+def find_type(record: str) -> str:
     """
     Searches for the 3 character document type in the record
-    :param :
-    :return:
+    :param: a read-line
+    :return: three character token from the set (SEC,CMP,FIN)
     """
     token = compile(r'(SEC|CMP|FIN)')
 
-    return findall(token, record)[0]
+    # return first match only
+    matched_type = findall(token, record)[0]
+
+    if matched_type in ['SEC', 'CMP', 'FIN']:
+        return matched_type
+    else:
+        print('Invalid return value from find_type method.')
+        raise ValueError
 
 
-def generate_payload(file_path: str):
+def stream_flatfile(fpath: str):
+    """
+    Creates a filesystem handle on a local file.  Generates a list of fields.
+    :param fpath: str
+    :return:
+    """
+    with open(fpath, 'r') as handle:
+        yield handle.read()
+
+
+def generate_payload(fpath: str):
     """
     Opens a fs handle to specified path.  Reads each line in the flatfile.  Determines type of record.
     Parses fixed width values according to record type.
-    :param file_path: string
-    :return:
+    :param fpath: str
+    :return: yields record token, and parsed record
     """
-    with open(file_path) as handle:
-        for line in handle.readlines():
+    try:
+        for line in stream_flatfile(fpath):
             p = create_parser(field_widths.get(find_type(line)))(line)
-            yield (find_type(line), p)
+            yield(find_type(line), p)
+    except BaseException as e:
+        print("Exception in generate_payload execution: {0}".format(e),
+              e.args)
 
 
-secProducer = AvroProducer(**producerConfig, default_value_schema=avro.load(Path('schema_registry/schemas/finwiresec.avsc')))
-finProducer = AvroProducer(**producerConfig, default_value_schema=avro.load(Path('schema_registry/schemas/finwirefin.avsc')))
-cmpProducer = AvroProducer(**producerConfig, default_value_schema=avro.load(Path('schema_registry/schemas/finwirecmp.avsc')))
+def ackback(err, msg):
+    if err is not None:
+        print("Failed to deliver message: {0}, Error: {1}".format(msg.value(), err.str()))
+    else:
+        print("Produced record to topic {0} partition [{1}] @ offset {2}".format(msg.topic(), msg.partition(), msg.offset()))
 
 
-finSchema = JSONSchema('../schema_registry/schemas/finwirefin.json')
-cmpSchema = JSONSchema('../schema_registry/schemas/finwirecmp.json')
-secSchema = JSONSchema('../schema_registry/schemas/finwiresec.json')
+config = {
+    "bootstrap.servers": "localhost:9092",
+    "schema.registry.url": "http://127.0.0.1:8081",
+    "linger.ms": 50
+}
 
-
-def stream_flatfile(file_path):
-    """
-    Creates a filesystem handle on a local file.  Generates a list of fields.
-    :param str: file_path
-    :return:
-    """
-    with open(file_path, 'r') as handle:
- 		yield handle.read()
-
-def callback(err, msg):
-	if err is not None:
-		print(f"Failed to deliver message: {err}")
-	else:
-		print("Produced record to topic {msg.topic} partition [{msg.partition}] @ offset {msg.offset}"
-
-
+p = AvroProducer(config=config)
 
 # Route message production based on doc type
-for file_path in Path('data/tpcdi/').glob('FINWIRE*'):
-    for rec_type, record in generate_payload(file_path):
-        record_key = "{uuid4()}" + str(msg.timestamp())
-    
-    	if rec_type == 'SEC':
-            secProducer.produce(topic='finwireSEC')
-    	elif rec_type == 'CMP':
-    	    cmpProducer.produce(topic='finwireCMP')
-        elif rec_type == 'FIN':
-    	    finProducer.produce(topic='finwireFIN')
-        else:
-            print("Record is neither SEC, CMP, or FIN")
-            raise BaseException
+for file_path in Path('/data/').glob('FINWIRE*[1234]'):
+
+    for rec_type, record_value in generate_payload(file_path.__str__()):
+
+        record_key = str(uuid4())
+        topic_subject = "finwire{0}".format(rec_type)
+        record_schema = load((schema_dir / ('finwire{0}.avsc'.format(rec_type.lower()))).as_posix())
+
+        try:
+            p.produce(topic=topic_subject, key=record_key, value=record_value,
+                      value_schema=record_schema, callback=ackback)
+            p.poll(.25)
+        except RuntimeError as e:
+            print("Runtime Error: {}".format(e))
+    print("Completed file {}".format(file_path.as_posix()))
+
+p.flush()

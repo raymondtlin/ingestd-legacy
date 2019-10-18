@@ -6,6 +6,8 @@ from re import compile, findall
 from uuid import uuid4
 from confluent_kafka.avro import AvroProducer, load
 from itertools import zip_longest, accumulate
+from configparser import ConfigParser
+
 
 
 root_dir = Path(getcwd())
@@ -84,14 +86,26 @@ def ackback(err, msg):
     else:
         print("Produced record to topic {0} partition [{1}] @ offset {2}".format(msg.topic(), msg.partition(), msg.offset()))
 
+def register_schema(path_to_schema):
+    c = avro.CachedSchemaRegistryClient('http://localhost:8081')
+    schema_path=Path('/home/ubuntu/finwire/ingestd/schema_registry/schemas')
+    for schema in path_to_schema.glob("*"):
+        parsed_avro_schema = avro.loads(schema.read_text())
+	subj = schema.as_posix().split("/")[-1].split(".")[0]
+        c.register(avro_schema=parsed_avro_schema, subject=subj)
 
-config = {
-    "bootstrap.servers": "localhost:9092",
-    "schema.registry.url": "http://127.0.0.1:8081",
-    "linger.ms": 50
-}
 
-p = AvroProducer(config=config)
+def configure(ini_path):
+    """
+    :param ini_path: str
+    :return config: dict
+    """
+
+    config = ConfigParser()
+    config.read(ini_path)
+    return config
+
+p = AvroProducer(config=configure('conf/finwire.ini'))
 
 # Route message production based on doc type
 for file_path in Path('/data/').glob('FINWIRE*[1234]'):

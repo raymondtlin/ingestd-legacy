@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 from collections import defaultdict
 from fastavro import writer, parse_schema
+from confluent_kafka import avro
 
 
 class Schema(object):
@@ -25,6 +26,14 @@ class Schema(object):
 
         with open('{0}.avsc'.format(self.name), 'wb') as handle:
             writer(handle, parsed)
+
+    def register_schema(path_to_schema):
+        c = avro.CachedSchemaRegistryClient('http://localhost:8081')
+        schema_path = Path('schema_registry/schemas')
+        for schema in path_to_schema.glob("*"):
+            parsed_avro_schema = avro.loads(schema.read_text())
+            subj = schema.as_posix().split("/")[-1].split(".")[0]
+            c.register(avro_schema=parsed_avro_schema, subject=subj)
 
 
 class DBTableSchema(Schema):
@@ -80,3 +89,4 @@ class JSONSchema(Schema):
 
         #for field in self.as_dict['fields']:
         #    self.fields.append(field)
+

@@ -1,1 +1,0 @@
-{"namespace":"ingestd.schema_registry.schemas","type":"record","name":"tradeTypes","fields":[{"name":"TT_ID","type":"string"},{"name":"TT_NAME","type":"string"},{"name":"TT_IS_SELL","type":"int"},{"name":"TT_IS_MRKT","type":"int"}]}

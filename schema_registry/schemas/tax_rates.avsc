@@ -1,1 +1,0 @@
-{"namespace":"ingestd.schema_registry.schemas","type":"record","name":"taxRates","fields":[{"name":"TX_ID","type":"string"},{"name":"TX_NAME","type":"string"},{"name":"TX_RATE","type":"int"}]}

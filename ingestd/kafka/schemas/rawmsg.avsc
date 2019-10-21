@@ -1,0 +1,1 @@
+{"name":"rawmsg","namespace":"ingestd.schema_registry.schemas","type":"record","fields":[{"name":"key","type":"record","fields":[{"name":"pts","type":"string"},{"name":"rec_type","type":"string"}]},{"name":"value","type":"string"}]}

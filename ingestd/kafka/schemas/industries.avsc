@@ -1,0 +1,1 @@
+{"namespace":"ingestd.schema_registry.schemas","type":"record","name":"industries","fields":[{"name":"IN_ID","type":"string"},{"name":"IN_NAME","type":"string"},{"name":"IN_SC_ID","type":"string"}]}

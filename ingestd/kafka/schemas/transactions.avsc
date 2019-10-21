@@ -1,0 +1,1 @@
+{"namespace":"ingest.schema_registry.scheams","type":"record","name":"transactions","fields":[{"name":"cdc_flag","type":"string"},{"name":"cdc_dsn","type":"string"},{"name":"ct_ca_id","type":"string"},{"name":"ct_dts","type":"int"},{"name":"ct_amt","type":"double"},{"name":"ct_name","type":"string"}]}

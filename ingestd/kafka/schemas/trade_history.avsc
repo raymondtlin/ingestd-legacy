@@ -1,0 +1,1 @@
+{"namespace":"ingestd.schema_registry.schemas","name":"trade_history","type":"record","fields":[{"name":"TH_T_ID","type":["int","null"]},{"name":"TH_DTS","type":"int"},{"name":"TH_ST_ID","type":"string"}]}

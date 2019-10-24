@@ -94,7 +94,32 @@ class DelimiterOperator(FlatFileConnector):
 
 class FixedWidthOperator(FlatFileConnector):
 
-    def configure(**kwargs):
-        CONFIG = {**kwargs}
+    def create_parser(fieldWidths: tuple):
+    # https://stackoverflow.com/a/4915359
+    """
+    Constructs a tuple of fieldwidths to parse fixed-width records
+    :param: fieldwidths: tuple of field-lengths + pad-lengths to split line by
+    :return: parsed line as List[string]
+    """
+    cuts = tuple(cut for cut in accumulate(abs(fw) for fw in fieldWidths))
+    pads = tuple(fw < 0 for fw in fieldWidths)
+    flds = tuple(zip_longest(pads, (0,) + cuts, cuts))[:-1]
 
-    def apply()
+    return lambda line: tuple(line[i: j] for pad, i, j in flds if not pad)
+
+
+    def apply(fieldwidths: dict):
+        """
+        Opens a fs handle to specified path.  Reads each line in the flatfile.
+        Determines type of record.
+        Parses fixed width values according to record type.
+        :param fpath: string
+        :param field_widths: dict
+        :return: yields record token, and parsed record
+        """
+        try:
+            for line in stream.readlines:
+                p = create_parser(field_widths.get(find_type(line)))(line)
+                yield (find_type(line), p)
+        except BaseException as e:
+            print("Exception in generate_payload execution: {0}".format(e), e.args)

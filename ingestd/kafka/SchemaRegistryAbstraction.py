@@ -27,7 +27,7 @@ class Schema(object):
         with open('{0}.avsc'.format(self.name), 'wb') as handle:
             writer(handle, parsed)
 
-    def register_schema(path_to_schema):
+    def register_schema(self, path_to_schema):
         c = avro.CachedSchemaRegistryClient('http://localhost:8081')
         schema_path = Path('schema_registry/schemas')
         for schema in path_to_schema.glob("*"):
@@ -51,27 +51,26 @@ class DBTableSchema(Schema):
         self.client = client(db_client)
         self.name = table_name
 
-    def fetch(self, config, table_name):
+    def fetch(self, config):
         """
-        :param: config: dict
-        :param: table_name: string
+        Retries record set from information_schema db
         """
         # Mitigate SQL injection
-        if re.search('[=]\s', table_name):
+
+        if re.search('[=]\s', self.name):
             print('Modify your parameter, it includes suspicious characters.')
             raise SyntaxError
         else:
             sql = "SELECT to_json(table_name), to_json(column_name), to_json(data_type)"
             sql += "FROM information_schema.columns"
-            sql += "WHERE table_name = {0}".format(table_name)
+            sql += "WHERE table_name = {0}".format(self.name)
 
         response = self.client.execute_statement(sql, **config.params)
         for record in response['records']:
             yield (record)
 
-    def to_dict(self) -> defaultdict(list):
-
-        for column_name, data_type in self.fetch():
+    def to_dict(self, config) -> defaultdict(list):
+        for column_name, data_type in self.fetch(config):
             self.as_dict.update(
                 dict({self.name: self.fields.append({"field_name": column_name,
                                                      "field_type": data_type})}))

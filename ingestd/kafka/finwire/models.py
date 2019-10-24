@@ -88,4 +88,6 @@ class Acct(object):
         self.ca_c_id = ca_c_id
         self.cdc_dsn = cdc_dsn
         self.ca_id = ca_id
-        self.
+        self.ca_name = ca_name
+        self.ca_tax_st = ca_tax_st
+        self.ca_st_id = ca_st_id

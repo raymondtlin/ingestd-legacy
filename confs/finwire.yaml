@@ -1,0 +1,21 @@
+producer:
+  bootstrap.servers: localhost:9092
+  schema.registry.url: http://localhost:8081
+
+sec:
+  consumer:
+    bootstrap.servers: localhost:9092
+    schema.registry.url: http://localhost:8081
+    topic: finwireSEC
+    group.id: finwireSEC
+    enable.auto.commit: True,
+    default.topic.config:
+    - auto.offset.reset: earliest
+
+  loader:
+    bootstrap.servers: localhost:9092
+    schema.registry.url: http://localhost:8081
+    topic: finwireSEC
+    consumer:
+    - bootstrap.servers: localhost:9092
+    - schema.registry.url: http://localhost:8081

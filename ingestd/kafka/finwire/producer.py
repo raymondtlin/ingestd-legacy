@@ -4,7 +4,9 @@ from ingestd.kafka.finwire import utils
 from confluent_kafka import avro
 from pathlib import Path
 from kafkian import Producer
-from kafkian.serde.serialization import AvroSerializer, AvroStringKeySerializer, SubjectNameStrategy
+from kafkian.serde.serialization import (AvroSerializer,
+                                         AvroStringKeySerializer,
+                                         SubjectNameStrategy)
 from kafkian.serde.avroserdebase import AvroRecord
 
 
@@ -19,43 +21,38 @@ class AbstractRecord(AvroRecord):
             self.fields.append(field.get('name'))
 
 
-
 def instantiate_producer(**kwargs):
     conf = utils.retrieve(kwargs['--path_to_config'], kwargs['--section'])
 
-    producer = Producer(config=conf,
-                        key_serializer=AvroStringKeySerializer(schema_registry_url="http://localhost:8081"),
-                        value_serializer=AvroSerializer(schema_registry_url="http://localhost:8081",
-                                                        subject_name_strategy=SubjectNameStrategy.TopicRecordNameStrategy)
-    )
-
+    producer = Producer(config=conf, key_serializer=AvroStringKeySerializer(
+        schema_registry_url="http://localhost:8081"),
+        value_serializer=AvroSerializer(
+            schema_registry_url="http://localhost:8081",
+            subject_name_strategy=SubjectNameStrategy.TopicRecordNameStrategy)
+            )
 
 
 def io_stream(file_path):
 
 
-
 def produce(producer: Producer, record: AbstractRecord, **kwargs):
 
     for key, value in
-        producer.produce(
-        config = utils.retrieve(kwargs['--path_to_config'], kwargs['--section']),
-        topic_name = kwargs['--topic'],
-        num_partitions = kwargs['--partitions'],
-        key=kwargs['--key'],
-        value={**record}
-    )
-
-
-
-
-
+       producer.produce(
+            config=utils.retrieve(
+                kwargs['--path_to_config'], kwargs['--section']),
+            topic_name=kwargs['--topic'],
+            num_partitions=kwargs['--partitions'],
+            key=kwargs['--key'],
+            value={**record}
+            )
 
 
 class Producer()
 
-    def __init__(self, **kwargs) -> None:
-        self.config = utils.retrieve(kwargs['--path_to_config'], kwargs['--section'])
+   def __init__(self, **kwargs) -> None:
+        self.config = utils.retrieve(
+            kwargs['--path_to_config'], kwargs['--section'])
         self.topic_name = kwargs['--topic']
         self.num_partitions = kwargs['--partitions']
         self.key = kwargs['--key']
@@ -68,23 +65,27 @@ class Producer()
 
     def produce(self, **kwargs):
         for rec_type, record_value in utils.generate_payload(self.source_file):
-            path_to_key_schema = Path('ingestd/kafka/schemas') / self.key_schema
-            path_to_value_schema = Path('ingestd/kafka/schemas') / self.value_schema
+            path_to_key_schema = Path(
+                'ingestd/kafka/schemas') / self.key_schema
+            path_to_value_schema = Path(
+                'ingestd/kafka/schemas') / self.value_schema
 
-            record_key = avro.load( path_to_key_schema.as_posix() )
-            record_schema = avro.load( path_to_value_schema.as_posix())
+            record_key = avro.load(path_to_key_schema.as_posix() )
+            record_schema = avro.load(path_to_value_schema.as_posix())
 
             self.producer.produce(key=record_key, value=record_value,
                                   key_schema=record_key,
                                   value_schema=record_value)
 
 
-p = avro.AvroProducer(config=utils.retrieve(file_path='confs/finwire.yaml', section='producer'))
-    # Route message production based on doc type
+p = avro.AvroProducer(config=utils.retrieve(
+    file_path='confs/finwire.yaml', section='producer'))
+   # Route message production based on doc type
 for file_path in Path('/data/').glob('FINWIRE*[1234]'):
     for rec_type, record_value in utils.generate_payload(file_path.__str__()):
         topic_subject = "finwire{0}".format(rec_type)
-        record_schema = avro.load((schema_dir / ('finwire{0}.avsc'.format(rec_type.lower()))).as_posix())
+        record_schema = avro.load(
+            (schema_dir / ('finwire{0}.avsc'.format(rec_type.lower()))).as_posix())
 
         try:
             p.produce(topic=topic_subject,

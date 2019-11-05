@@ -6,12 +6,11 @@ import structlog
 from confluent_kafka_helpers.consumer import AvroLazyConsumer
 from confluent_kafka_helpers.loader import AvroMessageLoader
 from ingestd.kafka.finwire import utils
-from itertools import zip_longest, accumulate
 
 
 class ParsingConsumer(AvroLazyConsumer):
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs):
 
         self.config = utils.retrieve(kwargs['--path_to_config'], kwargs['--section'])
         self._topic_name = kwargs['--topic']

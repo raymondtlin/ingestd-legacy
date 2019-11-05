@@ -11,7 +11,7 @@ except ImportError:
     from yaml import Loader, Dumper
 
 
-def retrieve(file_path: str, section: str) -> dict:
+def retrieve(file_path, section) -> dict:
     """
     Returns dict with configuration parameters.
     :param file_path: string
@@ -25,7 +25,7 @@ def retrieve(file_path: str, section: str) -> dict:
         try:
             return config.get(section)
         except KeyError as e:
-            print('Section: {} in the configuration as a key.'.format(section), e)
+            print('Section: {} in the conf as a key.'.format(section), e)
 
 
 def ackback(err, msg):

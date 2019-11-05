@@ -57,7 +57,7 @@ class DBTableSchema(Schema):
         """
         # Mitigate SQL injection
 
-        if re.search('[=]\s', self.name):
+        if re.search('[=]\\s', self.name):
             print('Modify your parameter, it includes suspicious characters.')
             raise SyntaxError
         else:
@@ -88,4 +88,3 @@ class JSONSchema(Schema):
 
         #for field in self.as_dict['fields']:
         #    self.fields.append(field)
-
